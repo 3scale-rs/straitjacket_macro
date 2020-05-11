@@ -1,0 +1,36 @@
+[package]
+edition = "2018"
+name = "straitjacket_macro"
+description = "A macro to help parse responses from 3scale Porta."
+version = "0.1.0"
+authors = ["Alejandro Martinez Ruiz <alex@flawedcode.org>"]
+license = "Apache-2.0"
+repository = "https://github.com/3scale-rs/straitjacker_macro"
+readme = "README.md"
+exclude = [
+    ".rls.toml",
+    ".rustfmt.toml",
+    ".gitignore",
+    "bors.toml",
+    ".appveyor.yml",
+    ".travis.yml",
+    "/ci/**",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[features]
+macro-debug = ["syn/full", "syn/extra-traits"]
+
+[dependencies]
+syn = "^1"
+quote = "^1"
+proc-macro2 = "^1"
+Inflector = "^0.11"
+
+[dev-dependencies]
+serde = { version = "^1", features = ["derive"] }
+serde_json = "^1"
