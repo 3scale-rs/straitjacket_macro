@@ -349,19 +349,19 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
     // generate code
     let quoted_plural = quote! {
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-        struct #name_and_metadata {
+        pub struct #name_and_metadata {
             #[serde(flatten)]
             item: #name,
             #[serde(flatten, skip_serializing)]
             metadata: Option<#metadata>,
         }
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-        enum #name_tag {
+        pub enum #name_tag {
             #[serde(rename = #name_snake_s)]
             Tag(#name_and_metadata),
         }
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-        struct #plural {
+        pub struct #plural {
             #[serde(rename = #plural_snake_s)]
             #plural_snake: Vec<#name_tag>,
         }
