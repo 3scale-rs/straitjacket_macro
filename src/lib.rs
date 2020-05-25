@@ -355,11 +355,38 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
             #[serde(flatten, skip_serializing)]
             metadata: Option<#metadata>,
         }
+
+        impl #name_and_metadata {
+            pub fn item(&self) -> &#name {
+                &self.item
+            }
+
+            pub fn metadata(&self) -> Option<&#metadata> {
+                self.metadata.as_ref()
+            }
+
+            pub fn item_mut(&mut self) -> &mut #name {
+                &mut self.item
+            }
+
+            pub fn into_item(self) -> #name {
+                self.item
+            }
+        }
+
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
         pub enum #name_tag {
             #[serde(rename = #name_snake_s)]
             Tag(#name_and_metadata),
         }
+
+        impl #name_tag {
+            pub fn into_inner(self) -> #name_and_metadata {
+                let #name_tag::Tag(inner) = self;
+                inner
+            }
+        }
+
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
         pub struct #plural {
             #[serde(rename = #plural_snake_s)]
@@ -380,19 +407,17 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
         }
 
         impl From<#plural> for Vec<#name_and_metadata> {
-            fn from(mr: #plural) -> Self {
-                mr.#plural_snake.into_iter().map(|mr| {
-                    let #name_tag::Tag(mramd) = mr;
-                    mramd
-                }).collect()
+            fn from(mrs: #plural) -> Self {
+                mrs.#plural_snake.into_iter()
+                    .map(#name_tag::into_inner)
+                    .collect()
             }
         }
 
         impl From<#plural> for Vec<#name> {
-            fn from(mr: #plural) -> Self {
-                mr.#plural_snake.into_iter().map(|mr| {
-                    let #name_tag::Tag(mramd) = mr;
-                    mramd.item
+            fn from(mrs: #plural) -> Self {
+                mrs.#plural_snake.into_iter().map(|mr| {
+                    mr.into_inner().into_item()
                 }).collect()
             }
         }
