@@ -385,6 +385,11 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
                 let #name_tag::Tag(inner) = self;
                 inner
             }
+
+            pub fn get_inner(&self) -> &#name_and_metadata {
+                let #name_tag::Tag(inner) = self;
+                inner
+            }
         }
 
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
