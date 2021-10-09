@@ -393,6 +393,12 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
             #plural_snake: Vec<#name_tag>,
         }
 
+        impl #plural {
+            pub fn get_inner(&self) -> &Vec<#name_tag> {
+                &self.#plural_snake
+            }
+        }
+
         impl From<Vec<#name>> for #plural {
             fn from(mrvec: Vec<#name>) -> Self {
                 #plural {
