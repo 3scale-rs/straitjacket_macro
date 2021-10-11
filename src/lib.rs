@@ -385,12 +385,23 @@ pub fn straitjacket(attr: TokenStream, item: TokenStream) -> TokenStream {
                 let #name_tag::Tag(inner) = self;
                 inner
             }
+
+            pub fn get_inner(&self) -> &#name_and_metadata {
+                let #name_tag::Tag(inner) = self;
+                inner
+            }
         }
 
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
         pub struct #plural {
             #[serde(rename = #plural_snake_s)]
             #plural_snake: Vec<#name_tag>,
+        }
+
+        impl #plural {
+            pub fn get_inner(&self) -> &Vec<#name_tag> {
+                &self.#plural_snake
+            }
         }
 
         impl From<Vec<#name>> for #plural {
